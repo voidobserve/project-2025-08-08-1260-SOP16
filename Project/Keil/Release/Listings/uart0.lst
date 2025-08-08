@@ -1,0 +1,64 @@
+C51 COMPILER V9.60.7.0   UART0                                                             08/08/2025 11:55:38 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART0
+OBJECT MODULE PLACED IN .\Release\Objects\uart0.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\..\HardWare\uart0.c LARGE OPTIMIZE(8,SPEED) BROWSE INTVECTOR(0X000C) 
+                    -INCDIR(..\..\Libraries\Include;..\..\User;..\..\HardWare) INTERVAL(3) DEBUG OBJECTEXTEND PRINT(.\Release\Listings\uart0.
+                    -lst) OBJECT(.\Release\Objects\uart0.obj)
+
+line level    source
+
+   1          #include "uart0.h"
+   2          
+   3          /*********************************
+   4          |--------------------------------|
+   5          | 使用%d打印的数值不对时，请注意 |
+   6          |--------------------------------|
+   7          | 格式 |     含义     | 针对类型 |
+   8          |------|--------------|----------|
+   9          | %bd  | 单个字节变量 | char     |
+  10          | % d  | 两个字节变量 | int      |
+  11          | %ld  | 四个字节变量 | long int |
+  12          |--------------------------------|
+  13          **********************************/
+  14          
+  15          // 重写putchar()函数
+  16          char putchar(char uart_data)
+  17          {
+  18   1          UART0_DATA = uart_data;
+  19   1          while (!(UART0_STA & UART_TX_DONE(0x1)))
+  20   1              ; // 等待发送完成
+  21   1      
+  22   1          return uart_data;
+  23   1      }
+  24          
+  25          void uart0_config(void)
+  26          {
+  27   1          // 初始化打印
+  28   1          // TX
+  29   1       
+  30   1      
+  31   1          P2_MD1 &= ~GPIO_P27_MODE_SEL(0x03);
+  32   1          P2_MD1 |= GPIO_P27_MODE_SEL(0x01); // 输出模式
+  33   1          FOUT_S27 = GPIO_FOUT_UART0_TX;     // 复用为串口输出
+  34   1       
+  35   1          UART0_BAUD1 = (((SYSCLK - UART0_BAUD) / UART0_BAUD) >> 8) & 0xFF;
+  36   1          UART0_BAUD0 = ((SYSCLK - UART0_BAUD) / UART0_BAUD) & 0xFF;
+  37   1          UART0_CON0 = UART_STOP_BIT(0x0) |
+  38   1                       UART_EN(0x1); // 8bit数据，1bit停止位
+  39   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     34    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
