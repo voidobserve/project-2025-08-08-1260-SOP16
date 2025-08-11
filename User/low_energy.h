@@ -3,5 +3,10 @@
 
 #include "user_config.h"
 
+void sleep_in(void);
+void sleep_out(void);
+
+
+void low_energy(void); // 低功耗
 
 #endif

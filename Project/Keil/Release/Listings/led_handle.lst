@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/08/2025 16:56:36 PAGE 1   
+C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/11/2025 14:25:49 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LED_HANDLE
@@ -62,7 +62,7 @@ line level    source
   50   1          led_all_off();
   51   1      
   52   1          cur_led_mode = led_mode;
-C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/08/2025 16:56:36 PAGE 2   
+C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/11/2025 14:25:49 PAGE 2   
 
   53   1      }
   54          
@@ -126,7 +126,7 @@ line level    source
  112   2              if (bat_adc_val > BAT_ADC_VAL_4) // 电池电量大于4格
  113   2              {
  114   3                  cur_led_gear = 5; // 亮5格
-C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/08/2025 16:56:36 PAGE 3   
+C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/11/2025 14:25:49 PAGE 3   
 
  115   3              }
  116   2              else if (bat_adc_val > BAT_ADC_VAL_3) // 电池电量大于3格
@@ -190,7 +190,7 @@ line level    source
  173   2              if (cur_led_gear >= 3)
  174   2              {
  175   3                  LED_3_ON();
-C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/08/2025 16:56:36 PAGE 4   
+C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/11/2025 14:25:49 PAGE 4   
 
  176   3              }
  177   2              else
@@ -254,7 +254,7 @@ line level    source
  234   2              else if (bat_adc_val > BAT_ADC_VAL_1) // 电池电量大于1格
  235   2              {
  236   3                  cur_led_gear = 2; // 亮2格，让第2格闪烁
-C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/08/2025 16:56:36 PAGE 5   
+C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/11/2025 14:25:49 PAGE 5   
 
  237   3              }
  238   2              else
@@ -318,7 +318,7 @@ line level    source
  294   1          if (flag_led_setting_mode_exit_times_come)
  295   1          {
  296   2              flag_led_setting_mode_exit_times_come = 0;
-C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/08/2025 16:56:36 PAGE 6   
+C51 COMPILER V9.60.7.0   LED_HANDLE                                                        08/11/2025 14:25:49 PAGE 6   
 
  297   2      
  298   2              flag_is_in_setting_mode = 0; // 退出设置模式

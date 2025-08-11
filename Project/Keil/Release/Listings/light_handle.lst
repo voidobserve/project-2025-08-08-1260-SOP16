@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/08/2025 16:56:36 PAGE 1   
+C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/11/2025 14:25:49 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LIGHT_HANDLE
@@ -62,7 +62,7 @@ line level    source
               
                       break;
               
-C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/08/2025 16:56:36 PAGE 2   
+C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/11/2025 14:25:49 PAGE 2   
 
                   case 4:
                       // 初始放电挡位 4档，刚开始是 56.98%开始放电
@@ -126,7 +126,7 @@ line level    source
  112   1          // }
  113   1      
  114   1          if (1 == cur_discharge_rate) // 放电速率1档，M1
-C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/08/2025 16:56:36 PAGE 3   
+C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/11/2025 14:25:49 PAGE 3   
 
  115   1          {
  116   2              /*
@@ -190,7 +190,7 @@ line level    source
  173   2                  暂定每次降低 0.6%
  174   2              */
  175   2      
-C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/08/2025 16:56:36 PAGE 4   
+C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/11/2025 14:25:49 PAGE 4   
 
  176   2              // 当前的占空比在47%以上时，不包括47%，每40s降低一次占空比
  177   2              if (cur_light_pwm_duty_val > (u32)TIMER2_FEQ * 47 / 100)
@@ -254,7 +254,7 @@ line level    source
  231   5                      }
  232   4                  }
  233   3              }
-C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/08/2025 16:56:36 PAGE 5   
+C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/11/2025 14:25:49 PAGE 5   
 
  234   2              else // 当前的占空比在42%及以下，每420秒降低一次占空比
  235   2              {
@@ -318,7 +318,7 @@ line level    source
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    479    ----
-C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/08/2025 16:56:36 PAGE 6   
+C51 COMPILER V9.60.7.0   LIGHT_HANDLE                                                      08/11/2025 14:25:49 PAGE 6   
 
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----

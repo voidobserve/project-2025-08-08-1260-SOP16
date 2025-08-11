@@ -1,0 +1,56 @@
+C51 COMPILER V9.60.7.0   PGA                                                               08/11/2025 14:25:49 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE PGA
+OBJECT MODULE PLACED IN .\Release\Objects\pga.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\..\HardWare\pga.c LARGE OPTIMIZE(8,SPEED) BROWSE INTVECTOR(0X000C) IN
+                    -CDIR(..\..\Libraries\Include;..\..\User;..\..\HardWare) INTERVAL(3) DEBUG OBJECTEXTEND PRINT(.\Release\Listings\pga.lst)
+                    - OBJECT(.\Release\Objects\pga.obj)
+
+line level    source
+
+   1          #include "pga.h"
+   2          
+   3          /*
+   4              SOP16封装只能使用
+   5              P26、P27、P30
+   6              P21、P22、P23
+   7              这两组作为运放的引脚
+   8          */
+   9          
+  10          void pga_config(void)
+  11          {
+  12   1          // Note：如果同时使用AMP0和AMP2，则需要配置AMP_CON8[0] = 0;AMP_CON8[1] = 0，关闭使�
+             -�，如以下两行代码
+  13   1          AMP_CON8 &= ~(PGA0_IP_TO_PGA2_IN_EN(0x1) | // 关闭PGA2的IN选通到PGA0的IP使能
+  14   1                        PGA0_IN_TO_PGA2_IP_EN(0x1)); // 关闭PGA2的IP选通到PGA0的IN使能
+  15   1      
+  16   1          // 配置AMP0的IO    P21--OP0_P  P22--OP0_N  P23--OP0_O
+  17   1          P2_MD0 |= GPIO_P21_MODE_SEL(0x3) | // P21\P22\P23设为模拟模式
+  18   1                    GPIO_P22_MODE_SEL(0x3) |
+  19   1                    GPIO_P23_MODE_SEL(0x3);
+  20   1      
+  21   1          AMP_CON7 |= AMP0_FB_SEL(0x1);      // 使能AMP0内部反馈通路
+  22   1          AMP_CON8 |= AMP0_IN2_IO(0x1);      // 使能AMP0负向输入端到IO的通路
+  23   1          AMP_CON9 |= AMP0_IP2_IO_EN(0x1);   // 使能AMP0正向输入端到IO的通路
+  24   1          AMP_CON10 |= AMP0_OUT2_IO_EN(0x1); // 使能AMP0输出端到IO的通路
+  25   1          AMP_CON1 = AMP_PGA0_RIN(0x06) |    // AMP0内置负向输入电阻选择 2.5 KΩ
+  26   1                     AMP_PGA0_RFB(0x1) |     // AMP0内置反馈电阻选择 160 KΩ     (放大倍数= (RFB+RIN
+             -)/RIN == 65 )
+  27   1                     AMP_PGA0_IB(0x3);       // 总偏置电流和输出电流选择大电流
+  28   1          AMP_CON11 |= AMP_PGA0_EN(0x1);     // 使能AMP0
+  29   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     49    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

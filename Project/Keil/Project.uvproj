@@ -416,6 +416,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\HardWare\timer2.c</FilePath>
             </File>
+            <File>
+              <FileName>pga.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\HardWare\pga.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -445,6 +450,11 @@
               <FileName>light_handle.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\light_handle.c</FilePath>
+            </File>
+            <File>
+              <FileName>low_energy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\low_energy.c</FilePath>
             </File>
           </Files>
         </Group>

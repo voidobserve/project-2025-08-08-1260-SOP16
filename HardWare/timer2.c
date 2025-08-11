@@ -4,10 +4,13 @@
 void timer2_pwm_config(void)
 {
     // 配置 xx 为 PWM 输出端口
-    P2_MD0 &= ~GPIO_P22_MODE_SEL(0x3);
-    P2_MD0 |= GPIO_P22_MODE_SEL(0x1); // 输出模式
-    FOUT_S22 = GPIO_FOUT_TMR2_PWMOUT; 
+    // P2_MD0 &= ~GPIO_P22_MODE_SEL(0x3);
+    // P2_MD0 |= GPIO_P22_MODE_SEL(0x1); // 输出模式
+    // FOUT_S22 = GPIO_FOUT_TMR2_PWMOUT; 
 
+    P3_MD0 &= ~GPIO_P30_MODE_SEL(0x3);
+    P3_MD0 |= GPIO_P30_MODE_SEL(0x1); // 输出模式
+    FOUT_S30 = GPIO_FOUT_TMR2_PWMOUT;
 
     TMR_ALLCON = TMR2_CNT_CLR(0x1);                        // 清除计数值
     TMR2_PRH = TMR_PERIOD_VAL_H((TIMER2_FEQ >> 8) & 0xFF); // 周期值
@@ -21,7 +24,10 @@ void timer2_pwm_config(void)
 // 开启PWM，引脚复用为pwm输出
 void timer2_pwm_enable(void)
 {
-    FOUT_S22 = GPIO_FOUT_TMR2_PWMOUT;
+    // FOUT_S22 = GPIO_FOUT_TMR2_PWMOUT;
+
+    FOUT_S30 = GPIO_FOUT_TMR2_PWMOUT;
+
     TMR2_CONL = TMR_SOURCE_SEL(0x7) | TMR_PRESCALE_SEL(0x07) | TMR_MODE_SEL(0x2); // 选择系统时钟，时钟源 128 分频，PWM模式
 }
 
@@ -29,8 +35,12 @@ void timer2_pwm_enable(void)
 void timer2_pwm_disable(void)
 {
     TMR2_CONL &= ~(0x03 << 0);    // 不使能定时器计数
-    FOUT_S22 = GPIO_FOUT_AF_FUNC; // 数字复用功能输出
-    P22 = 0;
+
+    // FOUT_S22 = GPIO_FOUT_AF_FUNC; // 数字复用功能输出
+    // P22 = 0;
+
+    FOUT_S30 = GPIO_FOUT_AF_FUNC; // 数字复用功能输出
+    P30 = 0;
 }
 
 

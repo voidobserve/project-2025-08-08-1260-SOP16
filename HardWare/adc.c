@@ -9,7 +9,8 @@ void adc_config(void)
     // 检测电池电压的引脚
     P2_MD1 |= GPIO_P24_MODE_SEL(0x03); // 模拟模式
     // 检测充电电流（流入电池的电流）的引脚
-    P2_MD0 |= GPIO_P21_MODE_SEL(0x03); // 模拟模式
+    // P2_MD0 |= GPIO_P21_MODE_SEL(0x03); // 模拟模式
+    P2_MD1 |= GPIO_P27_MODE_SEL(0x03); // 模拟模式
 
     ADC_CFG1 |= (0x0F << 3); // ADC时钟分频为16分频，为系统时钟/16
     ADC_CFG2 = 0xFF;         // 通道0采样时间配置为256个采样时钟周期
@@ -86,7 +87,8 @@ void adc_sel_pin(u8 adc_pin)
     else if (ADC_PIN_DETECT_CURRENT == adc_pin)
     {
         // 检测电流的引脚
-        ADC_CHS0 |= (0x11 << 0); // P21 对应的模拟通道
+        // ADC_CHS0 |= (0x11 << 0); // P21 对应的模拟通道
+        ADC_CHS0 |= (0x17 << 0); // P27 对应的模拟通道
     }
 
     ADC_CFG0 |= ADC_CHAN0_EN(0x1) | // 使能通道0转换

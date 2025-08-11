@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 1   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE TIMER0
@@ -62,7 +62,7 @@ line level    source
   49   3                  // ir_fliter &= 0x07;
   50   3      
   51   3                  // if (ir_fliter == 0x07)
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 2   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 2   
 
   52   3                  //     filter_level = 1;
   53   3                  // else if (ir_fliter == 0x00)
@@ -126,7 +126,7 @@ line level    source
  108   6                              __ir_data |= 0x01;
  109   6      
  110   6                              // P15D = 1; // 测试红外解码
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 3   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 3   
 
  111   6                          }
  112   5                          else if (ir_level_cnt <= 150) // 小于15000us,说明接收到了格式头
@@ -190,7 +190,7 @@ line level    source
  169   3                  {
  170   4                      if (flag_is_led_1_enable)
  171   4                      {
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 4   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 4   
 
  172   5                          LED_1_PIN = LED_ON_LEVEL;
  173   5                      }
@@ -254,7 +254,7 @@ line level    source
  231   6                              // 处于初始放电挡位指示模式，才进入
  232   6                              if (CUR_LED_MODE_INITIAL_DISCHARGE_GEAR_IN_SETTING_MODE == cur_led_mode ||
  233   6                                  CUR_LED_MODE_INITIAL_DISCHARGE_GEAR_IN_INSTRUCTION_MODE == cur_led_mode)
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 5   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 5   
 
  234   6                              {
  235   7                                  if (0 == flag_blink_dir)
@@ -318,7 +318,7 @@ line level    source
  292   8                                      flag_blink_dir = 1;
  293   8                                  }
  294   7                                  else
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 6   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 6   
 
  295   7                                  {
  296   8                                      LED_1_OFF();
@@ -382,7 +382,7 @@ line level    source
  354   8                                      {
  355   9                                          LED_5_OFF();
  356   9                                          flag_blink_dir = 0;
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 7   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 7   
 
  357   9                                      }
  358   8                                  }
@@ -446,7 +446,7 @@ line level    source
  415   7                              }
  416   6                              else if (cnt <= (22000 + 60)) // 22s + 60ms
  417   6                              {
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 8   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 8   
 
  418   7                                  // 累计涓流充电22s后，关闭控制充电的PWM，之后可以在这期
              -间检测电池是否满电
@@ -510,7 +510,7 @@ line level    source
  475   7                                  if (cur_led_mode != CUR_LED_MODE_OFF &&
  476   7                                      cur_led_mode != CUR_LED_MODE_CHARGING &&
  477   7                                      (0 == flag_allow_light_in_setting_mode))
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 9   
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 9   
 
  478   7                                  // if (cur_led_mode != CUR_LED_MODE_OFF &&
  479   7                                  //     cur_led_mode != CUR_LED_MODE_CHARGING)
@@ -574,7 +574,7 @@ line level    source
  536   5                          static u32 cnt = 0;
  537   5      
  538   5                          if (flag_is_auto_shutdown_enable)
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 10  
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 10  
 
  539   5                          {
  540   6                              cnt++; // 累计定时关机时间
@@ -638,7 +638,7 @@ line level    source
  598   4                  }
  599   3              }
  600   2      
-C51 COMPILER V9.60.7.0   TIMER0                                                            08/08/2025 16:56:36 PAGE 11  
+C51 COMPILER V9.60.7.0   TIMER0                                                            08/11/2025 14:25:48 PAGE 11  
 
  601   2      #endif // 放电时间控制
  602   2      

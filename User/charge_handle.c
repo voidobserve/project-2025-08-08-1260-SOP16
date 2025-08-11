@@ -62,7 +62,6 @@ void charge_handle(void)
             // adc_sel_pin(ADC_PIN_DETECT_CHARGE);
             // charging_adc_val = adc_getval();
             adc_update_charge_adc_val(ADC_REF_3_0_VOL);
-            
 
             // 如果充电电压过大，PWM百分比设置为0，等到电压变小才打开
             // if (charging_adc_val >= (u16)((u32)30000 * 4096 / 11 / 3 / 1000)) // 充电电压超过30V
@@ -135,7 +134,6 @@ void charge_handle(void)
             cur_charge_phase = CUR_CHARGE_PHASE_NORMAL_CHARGE;
         }
 
- 
         // 电池电压大于 xx V，从正常充电变为涓流充电
         // if ((bat_adc_val >= (u16)((u32)3400 * 4096 / 2 / 2 / 1000)) &&
         //     (CUR_CHARGE_PHASE_TRICKLE_CHARGE_WHEN_APPROACH_FULLY_CHARGE != cur_charge_phase))
@@ -174,8 +172,8 @@ void charge_handle(void)
                 测试发现，
                 如果只通过检测电压的方式来累计计数值，
                 即使电池从3.55V充到3.57V，很长时间都没有进入下面的条件，
-                PWM占空比一直卡在6%~10% 
-            */ 
+                PWM占空比一直卡在6%~10%
+            */
             if (trickle_charge_cnt >= 100)
             {
                 trickle_charge_cnt = 0;
@@ -204,59 +202,9 @@ void charge_handle(void)
             // current_adc_val = adc_getval();
             // current = (u32)current_adc_val * 3 * 1000 * (1000 / 5) / 4096 / 76; //
 
-#if 0
-            // if (bat_adc_val < (u16)((u32)(3500) * 4096 / 2 / 2 / 1000))
-            // {
-            //     if (current > 2000) // 计算出来是2A恒流充电
-            //     {
-            //         if (pwm_duty > 0)
-            //         {
-            //             pwm_duty--;
-            //         }
-            //     }
-            //     else if (current < 2000)
-            //     {
-            //         if (pwm_duty < 100) // 100%占空比
-            //         {
-            //             pwm_duty++;
-            //         }
-            //     }
-            // }
-            // else // 电池电压大于 3.5 V
-            {
-                if (current > 300)
-                {
-                    if (pwm_duty > MIN_PWM_DUTY_IN_TRICKLE_CHARGE)
-                    {
-                        pwm_duty--;
-                    }
-                }
-                else if (current < 300)
-                {
-                    if (pwm_duty < 100) // 100%占空比
-                    {
-                        pwm_duty++;
-                    }
-                }
-            }
-#endif
-
-#if 0
-            if (bat_adc_val < (u16)((u32)(3500 + 50) * 4096 / 2 / 2 / 1000)) // 如果电池电压小于3.5V
-            {
-                // fully_charge_cnt = 0;
-                /*
-                    不能回到正常调节，会影响指示灯的状态，
-                    样机涓流时指示灯全部常亮，正常充电时最高一格的指示灯闪烁：
-                */
-                // cur_charge_phase = CUR_CHARGE_PHASE_NORMAL_CHARGE; // 回到正常充电调节
-                // return;
-            }
-#endif
-
             // if (bat_adc_val >= (u16)((u32)(3600 + 150) * 4096 / 2 / 2 / 1000))
             // if (bat_adc_val >= (u16)((u32)(3600 + 50) * 4096 / 2 / 2 / 1000)) // 用万用表测试，在3.60~3.61V跳动时，还没有停止充电，等单片机停止充电、PWM输出0%之后，测得电池电压是3.59V，并且电池电压还在下降，最后落在3.44V
-            if (bat_adc_val >= (u16)((u32)(3700 + 100) * 4096 / 2 / 2 / 1000)) // 
+            if (bat_adc_val >= (u16)((u32)(3700 + 100) * 4096 / 2 / 2 / 1000)) //
             {
 
                 // fully_charge_cnt++;
@@ -342,7 +290,8 @@ void charge_handle(void)
             (u32)current_adc_val * 3 * 1000 * (1000 / 5) / 4096 / 110
             current =  (u32)current_adc_val * 3 * 1000 * (1000 / 5) / 4096 / 110;
         */
-        current = (u32)current_adc_val * 3 * 1000 * (1000 / 5) / 4096 / 76; // 计算电流，单位：mA
+        // current = (u32)current_adc_val * 3 * 1000 * (1000 / 5) / 4096 / 76; // 计算电流，单位：mA
+        current = (u32)current_adc_val * 3 * 1000 * (1000 / 5) / 4096 / 65; // 计算电流，单位：mA
 
         /*
             计算充电电压

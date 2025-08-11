@@ -185,90 +185,39 @@ void power_off(void)
     LIGHT_OFF();
 }
 
-void sleep_in(void)
+void user_init(void)
 {
-    SYS_CON6 |= SYS_MPDN_CNT(0x3);     // 关闭程序存储器供电的延迟时间配置4个系统周期
-    SYS_CON7 = (SYS_EXT_SLP_CNT(0x3) | // 退出低功耗延迟的时间配置各配四个系统周期
-                SYS_MTPUP_CNT(0x3) |
-                SYS_OPM_LDO_CNT(0x3) |
-                SYS_CLSM_LDO_CNT(0x3));
-    SYS_CON8 |= SYS_LPSLP_DIS_ANA(0x1);   // 打开低功耗sleep mode一键关模拟模块功能(即关闭TK,AMP,CMP,ADC之类的模块)
-    CLK_XOSC &= ~(CLK_XOSC_LOW_EN(0x1) |  // 关闭32.768KHz低速晶振
-                  CLK_XOSC_HIGH_EN(0x1)); // 关闭高速晶振
-    LVD_CON0 &= ~(LVD_VCC_DETE_EN(0x1) |  // 关闭VCC电源VCC电压低电检测功能
-                  LVD_VDD_DETE_EN(0x1));  // 关闭1.5V数字逻辑系统工作电压VDD低电检测功能
-    PMU_CON2 &= ~0x70;                    // 关闭VPTAT_ADC输出，关闭温度传感器输出VPTAT，主LDO过流档位选择50mA
-    CLK_CON0 &= ~CLK_SYSCLK_SEL(0x3);     // 系统时钟选择rc64k
-    FLASH_TIMEREG1 = 0x0;                 // 配置LIRC时FLASH访问速度
-    PMU_CON0 &= ~0x60;                    // 关闭VDD POR模块, 关闭VBG06_REF输出
-    CLK_ACON0 &= ~CLK_AIP_HRC_EN(0x1);    // 关闭HRC时钟
-    LP_CON = (LP_IDLE_EN(0x1) |
-              LP_SLEEP_GO_EN(0x1) | // Sleep低功耗模式唤醒后继续跑后续程序
-            //   LP_GLIRC_EN(0x1) |    // 关闭RC64K低速时钟（WUT需要根据这个时钟来进行计数，不能关闭）
-              LP_SLEEP_EN(0x1));    // 使能睡眠
-}
+    uart0_config();
 
-void sleep_out(void)
-{
-    SYS_CON8 &= ~SYS_LPSLP_DIS_ANA(0x1); // 关闭低功耗sleep mode一键关模拟模块功能(即打开TK,AMP,CMP,ADC之类的模块)
-    PMU_CON0 |= 0x60;                    // 使能VDD POR模块，使能VBG06_REF输出
-    LVD_CON0 |= (LVD_VCC_DETE_EN(0x1) |  // 使能VCC电源VCC电压低电检测功能
-                 LVD_VDD_DETE_EN(0x1));  // 使能1.5V数字逻辑系统工作电压VDD低电检测功能
-    PMU_CON2 |= 0x70;                    // 使能VPTAT_ADC输出，使能温度传感器输出VPTAT，主LDO过流档位选择100mA
-    CLK_ACON0 |= CLK_AIP_HRC_EN(0x1);    // 使能HRC时钟
-    LP_WKPND |= LP_WKUP_0_PCLR(0x1);     // 清除通道0唤醒标志位
-    FLASH_TIMEREG1 = 0x58;               // FLASH访问速度 = 系统时钟/3
-    CLK_CON0 |= CLK_SYSCLK_SEL(0x3);     // 系统时钟选择hirc_clk
-}
+    timer0_config();
+    timer1_pwm_config(); // 控制充电的PWM
+    timer1_pwm_disable();
+    timer2_pwm_config(); // 控制灯光的pwm
+    timer2_pwm_disable();
 
-// 低功耗
-void low_energy(void)
-{
-#define WUT_PERIOD_VAL (SYSCLK / 64 / 3000 - 1)
-    // if (CUR_LED_MODE_OFF != cur_charge_phase || /* 指示灯没有关闭 */
-    //     0 != cur_light_pwm_duty_val)            /* 主灯光的占空比不为0 */
-    // {
-    //     // 不满足进入低功耗的条件，退出
-    //     return;
-    // }
+    led_pin_config(); // led指示灯
 
-    printf("sleep\n");
-    /*
-        配置唤醒源，
-        红外接收，有低电平就唤醒，连接到唤醒通道0
-        充电电压 大于 4.9V 唤醒
+    // 红外接收引脚：
+    // P2_MD0 &= ~(GPIO_P23_MODE_SEL(0x03)); // 输入模式
+    // P2_PU |= GPIO_P23_PULL_UP(0x01);      // 上拉
 
-        使用定时唤醒，唤醒后检测一次充电电压，如果小于4.9V，回到低功耗
-    */
-    FIN_S10 = 0x14; // 唤醒通道0选择 红外接收引脚
+    P0_PU |= GPIO_P02_PULL_UP(0x01);    // 上拉
+    P0_MD0 &= ~GPIO_P02_MODE_SEL(0x03); // 输入模式
 
-    // 配置定时唤醒：
-    // 设置WUT的计数功能，配置一个3000ms的中断
-    __EnableIRQ(WUT_IRQn);         // 使能WUT中断
-    IE_EA = 1;                     // 使能总中断
-    TMR_ALLCON = WUT_CNT_CLR(0x1); // 清除计数值
-    WUT_PRH = TMR_PERIOD_VAL_H(((3000 - 1) >> 8) & 0xFF); // 周期值
-    WUT_PRL = TMR_PERIOD_VAL_L(((3000 - 1) >> 0) & 0xFF);
-    // WUT_PRH = TMR_PERIOD_VAL_H((WUT_PERIOD_VAL >> 8) & 0xFF); // 周期值
-    // WUT_PRL = TMR_PERIOD_VAL_L((WUT_PERIOD_VAL >> 0) & 0xFF);
-    WUT_CONH = TMR_PRD_PND(0x1) | TMR_PRD_IRQ_EN(0x1);                          // 使能唤醒定时器
-    WUT_CONL = TMR_SOURCE_SEL(0x7) | TMR_PRESCALE_SEL(0x6) | TMR_MODE_SEL(0x1); // 选择系统时钟，64分频，计数模式
+    adc_config();
+    pga_config();
 
-    LP_CON &= ~LP_ISD_DIS_LP_EN(0x01); // 使能ISD模式下低功耗功能
-    LP_WKPND = LP_WKUP_0_PCLR(0x01) |  /* 清除唤醒标志位 */
-               LP_WKUP_2_PCLR(0x1);    /* 清除唤醒标志位 */
-    LP_WKCON = (LP_WKUP_0_EDG(0x01) |  /* 通道0低电平触发唤醒 */
-                LP_WKUP_0_EN(0x01) |   /* 唤醒通道0使能 */
-                LP_WKUP_2_EDG(0x0) |   /* 通道2高电平触发唤醒 */
-                LP_WKUP_2_EN(0x1));    /* 唤醒通道2使能（WUT唤醒只能是唤醒通道2） */
+    // 上电后，需要先点亮红色指示灯，再变为电池电量指示模式
+    LED_1_ON();
+    delay_ms(1000);
 
-    sleep_in();
-    sleep_out();
+    param_init();
 
-    /* 唤醒后，关闭唤醒源 */
-    LP_WKCON &= ~LP_WKUP_0_EN(0x01); // 唤醒通道0不使能
+    light_init();
+    led_init();
+    led_mode_alter(CUR_LED_MODE_BAT_INDICATOR); // 电池电量指示模式
 
-    printf("wake up\n");
+    delay_ms(1); // 等待系统稳定
 }
 
 /**
@@ -288,62 +237,15 @@ void main(void)
     IO_MAP &= ~0x01; // 清除这个寄存器的值，实现关闭HCK和HDA引脚的调试功能（解除映射）
     WDT_KEY = 0xBB;  // 写一个无效的数据，触发写保护
 
-    uart0_config();
-    // my_debug_led_config();
+    user_init();
 
-    timer0_config();
-    timer1_pwm_config(); // 控制充电的PWM
-    timer1_pwm_disable();
-    timer2_pwm_config(); // 控制灯光的pwm
-    timer2_pwm_disable();
-
-    // timer1_set_pwm_high_feq();
-    // TODO: 7361不用加这个引脚配置:
-    led_pin_config();
-
-    // 红外接收引脚：
-    P2_MD0 &= ~(GPIO_P23_MODE_SEL(0x03)); // 输入模式
-    P2_PU |= GPIO_P23_PULL_UP(0x01);      // 上拉
-
-    adc_config();
-
-    // printf("sys reset\n"); // 打印至少占用1012字节空间
-
-    // TODO:
-    // 上电后，需要先点亮红色指示灯，再变为电池电量指示模式
-    LED_1_ON();
-    delay_ms(1000);
-
-    // cur_led_mode = CUR_LED_MODE_INITIAL_DISCHARGE_GEAR;
-
-#if 0
-    cur_led_mode = CUR_LED_MODE_BAT_INDICATOR; // 电池电量指示模式
-    cur_initial_discharge_gear = 5;
-    cur_discharge_rate = 3;
-#endif
-
-    // cur_led_mode = CUR_LED_MODE_CHARGING;
-
-    // bat_adc_val = 2000;
-    // led_status_refresh();
-    // cur_led_mode = CUR_LED_MODE_BAT_INDICATOR;
-
-    param_init();
-
-    light_init();
-    led_init();
-    led_mode_alter(CUR_LED_MODE_BAT_INDICATOR); // 电池电量指示模式
-
-    // light_ctl_blink_times = 3;
-    // flag_is_ctl_light_blink = 1;
-
-    printf("sys reset\n");
+    // printf("sys reset\n");
 
     while (1)
     {
-        low_energy();
+        // low_energy();
 
-#if 0
+#if 1
 
         /* 在放电时，检测电池电压，一旦低于2.5V，直接关机 */
         if (cur_charge_phase == CUR_CHARGE_PHASE_NONE || /* 如果不在充电 */
@@ -359,7 +261,6 @@ void main(void)
                 power_off();
             }
         }
-
 
         charge_handle();
         ir_handle(); // 函数内部会判断是否在充电，如果在充电则退出

@@ -1,0 +1,1 @@
+"..\..\User\low_energy.c" LARGE OPTIMIZE (8,SPEED) BROWSE INTVECTOR(0x000C) INCDIR(..\..\Libraries\Include;..\..\User;..\..\HardWare) interval(3) DEBUG OBJECTEXTEND PRINT(.\Release\Listings\low_energy.lst) OBJECT(.\Release\Objects\low_energy.obj)

@@ -14,10 +14,11 @@
 #include "led_handle.h"
 #include "ir_handle.h"
 #include "light_handle.h"
+#include "low_energy.h"
 
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
-#define USE_MY_DEBUG 0
+#define USE_MY_DEBUG 1
 
 // =================================================================
 // 红外接收相关变量                                                //
@@ -213,8 +214,7 @@ extern volatile bit flag_is_led_5_enable;
     }
 
 
-    
-extern void power_off(void);
-
+void power_off(void);
+void user_init(void);
 
 #endif
